@@ -124,20 +124,6 @@ jobs:
       run: |
         cd $OPENWRTROOT
         mkdir -p files/etc/opkg
-        if "$KMODS_IN_FIRMWARE" = 'true'
-        then
-            mkdir -p files/www/snapshots/targets
-            cp -r bin/targets/$TARGET files/www/snapshots/targets
-            cp ../config/opkg/distfeeds-18.06-local.conf files/etc/opkg/distfeeds.conf
-            sed -i "s/subtarget/$SUBTARGET/g" files/etc/opkg/distfeeds.conf
-            sed -i "s/target\//$TARGET\//g" files/etc/opkg/distfeeds.conf
-            sed -i "s/platform/$PLATFORM/g" files/etc/opkg/distfeeds.conf
-        else
-            cp ../config/opkg/distfeeds-18.06-remote.conf files/etc/opkg/distfeeds.conf
-            sed -i "s/subtarget/$SUBTARGET/g" files/etc/opkg/distfeeds.conf
-            sed -i "s/target\//$TARGET\//g" files/etc/opkg/distfeeds.conf
-            sed -i "s/platform/$PLATFORM/g" files/etc/opkg/distfeeds.conf
-        fi
         make package/install -j$(nproc) || make package/install -j1 V=s
         make target/install -j$(nproc) || make target/install -j1 V=s
         make checksum
